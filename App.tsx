@@ -14,14 +14,15 @@ import {Picker} from '@react-native-picker/picker';
 function App() {
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState({});
+  const [filter, setFilter] = useState('All');
 
   useEffect(() => {
     createTable();
     showNotes();
-  }, []);
+  }, [filter]);
 
   async function showNotes() {
-    const response = await listNote();
+    const response = await listNote(filter);
     setNotes(response);
   }
 
@@ -29,10 +30,11 @@ function App() {
     <SafeAreaView style={styles.container}>
       <View style={styles.modalPicker}>
         <Picker
-          selectedValue={category}
-          onValueChange={newCategory => {
-            setCategory(newCategory);
+          selectedValue={filter}
+          onValueChange={newFilter => {
+            setFilter(newFilter);
           }}>
+          <Picker.Item label="All" value={'All'} />
           <Picker.Item label="Personal" value={'Personal'} />
           <Picker.Item label="Work" value={'Work'} />
           <Picker.Item label="Others" value={'Others'} />
@@ -53,7 +55,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  modalPicker: {},
+  modalPicker: {
+    padding: 10,
+    borderTopWidth: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+  },
 });
 
 export default App;

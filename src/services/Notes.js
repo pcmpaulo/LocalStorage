@@ -23,21 +23,22 @@ export async function createNote(note) {
   });
 }
 
-export async function listNote() {
+export async function listNote(filter) {
   /// We need to create a promise manually for this transaction
+  let query = 'SELECT * FROM Notes';
+  if (filter !== 'All') {
+    query += ' WHERE category == "' + filter + '"';
+  }
+  query += ';';
+  console.log(query);
   return new Promise(resolve => {
     database.transaction(transaction => {
-      transaction.executeSql(
-        'SELECT * FROM Notes;',
-        [],
-        (transaction, resultSet) => {
-          resolve(resultSet.rows.raw());
-        },
-      );
+      transaction.executeSql(query, [], (transaction, resultSet) => {
+        resolve(resultSet.rows.raw());
+      });
     });
   });
 }
-
 
 export async function updateNote(note) {
   /// We need to create a promise manually for this transaction
